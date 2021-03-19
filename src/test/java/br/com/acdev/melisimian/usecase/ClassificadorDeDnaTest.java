@@ -1,6 +1,7 @@
 package br.com.acdev.melisimian.usecase;
 
 import br.com.acdev.melisimian.domain.Dna;
+import br.com.acdev.melisimian.domain.Pontuacao;
 import br.com.acdev.melisimian.usecase.impl.ClassificadorDeDnaImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,23 +25,37 @@ public class ClassificadorDeDnaTest {
     public void deve_achar_1_sequencia_CCCC_na_horizontal_test() {
         ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"));
-        classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
-        Assert.assertEquals(1, classificarDna.getPontuacao('C'));
+        Pontuacao pontuacao = classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
+        Assert.assertEquals(1, pontuacao.getPontuacao('C'));
     }
 
     @Test
     public void deve_achar_1_sequencia_CCCC_na_horizontal_com_palavra_CCCCCC_test() {
         ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCCC", "TCACTG"));
-        classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
-        Assert.assertEquals(1, classificarDna.getPontuacao('C'));
+        Pontuacao pontuacao = classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
+        Assert.assertEquals(1, pontuacao.getPontuacao('C'));
     }
 
     @Test
     public void deve_achar_2_sequencias_CCCC_na_horizontal_com_palavra_CCCCCCCC_test() {
         ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAC", "TATTGTGT", "AGAGGGAT", "CCCCCCCC", "TCACTGCT"));
-        classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
-        Assert.assertEquals(2, classificarDna.getPontuacao('C'));
+        Pontuacao pontuacao = classificarDna.verificaIgualdadeEmSequenciaHorizontal(4, dna);
+        Assert.assertEquals(2, pontuacao.getPontuacao('C'));
+    }
+
+
+    /**
+     * C T G A G A C T
+     * C T A T G C A T
+     * T A T T G T G T
+     * A G A G G G A T
+     */
+    @Test
+    public void is_simio_test(){
+        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
+        Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAT", "TATTGTGT", "AGAGGGAT"));
+        Assert.assertTrue(classificarDna.isSimio(dna));
     }
 }
