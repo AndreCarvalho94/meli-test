@@ -3,6 +3,7 @@ package br.com.acdev.melisimian.core.usecase;
 import br.com.acdev.melisimian.core.dataprovider.DnaRepository;
 import br.com.acdev.melisimian.core.entity.DnaEntity;
 import br.com.acdev.melisimian.core.model.Dna;
+import br.com.acdev.melisimian.core.model.Estatisticas;
 import br.com.acdev.melisimian.core.model.Pontuacao;
 import br.com.acdev.melisimian.core.usecase.impl.ClassificadorDeDnaImpl;
 import org.junit.Assert;
@@ -20,6 +21,11 @@ public class ClassificadorDeDnaTest {
         @Override
         public DnaEntity salvar(Dna dna, boolean isSimio) {
             return new DnaEntity("", true, 1L);
+        }
+
+        @Override
+        public Estatisticas consultarEstatisticas() {
+            return null;
         }
     });
 
