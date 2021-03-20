@@ -1,5 +1,6 @@
-package br.com.acdev.melisimian.components;
+package br.com.acdev.melisimian.components.impl;
 
+import br.com.acdev.melisimian.components.CalculadorDeHash;
 import com.google.common.hash.Hashing;
 import org.springframework.stereotype.Component;
 

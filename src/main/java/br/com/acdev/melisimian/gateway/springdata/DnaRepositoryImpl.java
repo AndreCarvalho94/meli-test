@@ -1,18 +1,22 @@
 package br.com.acdev.melisimian.gateway.springdata;
 
 import br.com.acdev.melisimian.components.CalculadorDeHash;
+import br.com.acdev.melisimian.core.exceptions.DnaJaExistenteException;
 import br.com.acdev.melisimian.core.dataprovider.DnaRepository;
 import br.com.acdev.melisimian.core.entity.DnaEntity;
 import br.com.acdev.melisimian.core.model.Dna;
 import br.com.acdev.melisimian.core.model.Estatisticas;
+import br.com.acdev.melisimian.gateway.exceptions.CriacaoDeBlobException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.rowset.serial.SerialBlob;
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 
 @Service
 @NoArgsConstructor
@@ -38,8 +42,10 @@ public class DnaRepositoryImpl implements DnaRepository {
             dnaEntity.setSimio(isSimio);
             dnaEntity.setHash(calculadorDeHash.executar(sequenciamento));
             return dnaRepositorySpringData.save(dnaEntity);
-        } catch (Exception ex) {
-            throw new RuntimeException("Erro ao converter para blob");
+        } catch (SQLException ex) {
+            throw new CriacaoDeBlobException();
+        } catch (DataIntegrityViolationException dtex){
+            throw new DnaJaExistenteException();
         }
     }
 

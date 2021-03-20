@@ -1,6 +1,7 @@
 package br.com.acdev.melisimian.components;
 
 
+import br.com.acdev.melisimian.components.impl.Sha256HashCalculador;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

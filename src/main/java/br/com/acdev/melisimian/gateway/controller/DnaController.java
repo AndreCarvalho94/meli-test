@@ -1,5 +1,6 @@
 package br.com.acdev.melisimian.gateway.controller;
 
+import br.com.acdev.melisimian.components.ValidadorDeDna;
 import br.com.acdev.melisimian.core.model.Dna;
 import br.com.acdev.melisimian.core.model.Estatisticas;
 import br.com.acdev.melisimian.core.usecase.ClassificadorDeDna;
@@ -9,6 +10,7 @@ import br.com.acdev.melisimian.gateway.controller.dto.IsSimianResponse;
 import br.com.acdev.melisimian.gateway.controller.dto.StatsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +25,12 @@ public class DnaController {
     @Autowired
     private ConsultarEstatisticas consultarEstatisticas;
 
+    @Autowired
+    private ValidadorDeDna validadorDeDna;
+
     @PostMapping("/simian")
     public ResponseEntity<IsSimianResponse> cadastrarDna(@RequestBody DnaRequest dna) {
+        validadorDeDna.executar(dna);
         Dna sequencia = new Dna(dna.getDna());
         return ResponseEntity.ok(new IsSimianResponse(classificadorDeDna.isSimio(sequencia)));
     }

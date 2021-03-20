@@ -1,7 +1,7 @@
 package br.com.acdev.melisimian.gateway;
 
 import br.com.acdev.melisimian.components.CalculadorDeHash;
-import br.com.acdev.melisimian.components.Sha256HashCalculador;
+import br.com.acdev.melisimian.components.impl.Sha256HashCalculador;
 import br.com.acdev.melisimian.core.entity.DnaEntity;
 import br.com.acdev.melisimian.core.model.Dna;
 import br.com.acdev.melisimian.core.model.Estatisticas;

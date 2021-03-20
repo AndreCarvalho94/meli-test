@@ -4,7 +4,7 @@ spring:
     password: password
     url: jdbc:h2:mem:testdb
     username: sa
-    data: dataset.sql
+    data: classpath:dataset.sql
   h2:
     console:
       enabled: true
