@@ -4,10 +4,14 @@ import br.com.acdev.melisimian.core.dataprovider.DnaRepository;
 import br.com.acdev.melisimian.core.model.Dna;
 import br.com.acdev.melisimian.core.model.Pontuacao;
 import br.com.acdev.melisimian.core.usecase.ClassificadorDeDna;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClassificadorDeDnaImpl implements ClassificadorDeDna {
 
     @Autowired

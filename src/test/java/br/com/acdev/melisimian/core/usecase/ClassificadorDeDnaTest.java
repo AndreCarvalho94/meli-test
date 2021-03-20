@@ -1,5 +1,7 @@
 package br.com.acdev.melisimian.core.usecase;
 
+import br.com.acdev.melisimian.core.dataprovider.DnaRepository;
+import br.com.acdev.melisimian.core.entity.DnaEntity;
 import br.com.acdev.melisimian.core.model.Dna;
 import br.com.acdev.melisimian.core.model.Pontuacao;
 import br.com.acdev.melisimian.core.usecase.impl.ClassificadorDeDnaImpl;
@@ -14,43 +16,47 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class ClassificadorDeDnaTest {
 
+    DnaRepository dnaRepository = (new DnaRepository() {
+        @Override
+        public DnaEntity salvar(Dna dna, boolean isSimio) {
+            return new DnaEntity("", true, 1L);
+        }
+    });
+
+    ClassificadorDeDnaImpl classificadorDeDna = new ClassificadorDeDnaImpl(dnaRepository);
+
     @Test
     public void deve_classificar_dna_simio() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         List<String> dna = Arrays.asList("CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG");
-        Assert.assertTrue(classificarDna.isSimio(new Dna(dna)));
+        Assert.assertTrue(classificadorDeDna.isSimio(new Dna(dna)));
     }
 
     @Test
     public void deve_achar_1_sequencia_CCCC_na_horizontal_test() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCTA", "TCACTG"));
-        Pontuacao pontuacao = classificarDna.verificarIgualdadeEmSequenciaHorizontal(dna);
+        Pontuacao pontuacao = classificadorDeDna.verificarIgualdadeEmSequenciaHorizontal(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('C'));
     }
 
     @Test
     public void deve_achar_1_sequencia_CCCC_na_horizontal_com_palavra_CCCCCC_test() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGA", "CTATGC", "TATTGT", "AGAGGG", "CCCCCC", "TCACTG"));
-        Pontuacao pontuacao = classificarDna.verificarIgualdadeEmSequenciaHorizontal(dna);
+        Pontuacao pontuacao = classificadorDeDna.verificarIgualdadeEmSequenciaHorizontal(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('C'));
     }
 
     @Test
     public void deve_achar_2_sequencias_CCCC_na_horizontal_com_palavra_CCCCCCCC_test() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAC", "TATTGTGT", "AGAGGGAT", "CCCCCCCC", "TCACTGCT"));
-        Pontuacao pontuacao = classificarDna.verificarIgualdadeEmSequenciaHorizontal(dna);
+        Pontuacao pontuacao = classificadorDeDna.verificarIgualdadeEmSequenciaHorizontal(dna);
         Assert.assertEquals(2, pontuacao.getPontuacao('C'));
     }
 
     @Test
     public void deve_achar_2_sequencias_na_linha_5() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAC", "TATTGTGT", "AGAGGGAT", "CCCCCCCC", "TCACTGCT"));
         Pontuacao pontuacao =
-                classificarDna.verificaIgualdadeEmDirecao(
+                classificadorDeDna.verificaIgualdadeEmDirecao(
                         dna, 4, 0, 0, 1, dna.tamanhoPalavras());
         Assert.assertEquals(2, pontuacao.getPontuacao('C'));
     }
@@ -65,7 +71,6 @@ public class ClassificadorDeDnaTest {
      **/
     @Test
     public void deve_achar_sequencia_em_diagonal_primaria_linha_2() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList(
                 "ATCGATCA",
                 "TATCGATC",
@@ -74,13 +79,12 @@ public class ClassificadorDeDnaTest {
                 "TTATCGGT",
                 "ACACGAGG"));
         Pontuacao pontuacao =
-                classificarDna.verificarIgualdadeEmDiagonalPrimaria(dna);
+                classificadorDeDna.verificarIgualdadeEmDiagonalPrimaria(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('T'));
     }
 
     @Test
     public void deve_achar_sequencia_em_diagonal_primaria_linha_3() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList(
                 "TTCGATCA",
                 "TCTCGATC",
@@ -89,19 +93,18 @@ public class ClassificadorDeDnaTest {
                 "TTATAGGT",
                 "ACACGAGG"));
         Pontuacao pontuacao =
-                classificarDna.verificarIgualdadeEmDiagonalPrimaria(dna);
+                classificadorDeDna.verificarIgualdadeEmDiagonalPrimaria(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('T'));
     }
 
     @Test
     public void deve_achar_sequencia_em_diagonal_secundaria_caso_simples() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList(
                 "TTCT",
                 "TCTC",
                 "TTAT",
                 "TGTA"));
-        Pontuacao pontuacao = classificarDna.verificaIgualdadeEmDiagonalSecundaria(dna);
+        Pontuacao pontuacao = classificadorDeDna.verificaIgualdadeEmDiagonalSecundaria(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('T'));
     }
 
@@ -115,7 +118,6 @@ public class ClassificadorDeDnaTest {
      **/
     @Test
     public void deve_achar_sequencia_em_diagonal_secundaria_todas_as_bases() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList(
                 "ATCGATCA",
                 "TATCGATC",
@@ -123,7 +125,7 @@ public class ClassificadorDeDnaTest {
                 "CGTGACTA",
                 "TTGACGGT",
                 "TGACGAGG"));
-        Pontuacao pontuacao = classificarDna.verificaIgualdadeEmDiagonalSecundaria(dna);
+        Pontuacao pontuacao = classificadorDeDna.verificaIgualdadeEmDiagonalSecundaria(dna);
         Assert.assertEquals(1, pontuacao.getPontuacao('A'));
         Assert.assertEquals(1, pontuacao.getPontuacao('T'));
         Assert.assertEquals(1, pontuacao.getPontuacao('C'));
@@ -138,8 +140,7 @@ public class ClassificadorDeDnaTest {
      */
     @Test
     public void is_simio_test() {
-        ClassificadorDeDnaImpl classificarDna = new ClassificadorDeDnaImpl();
         Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAT", "TATTGTGT", "AGAGGGAT"));
-        Assert.assertTrue(classificarDna.isSimio(dna));
+        Assert.assertTrue(classificadorDeDna.isSimio(dna));
     }
 }
