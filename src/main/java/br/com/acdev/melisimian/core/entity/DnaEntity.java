@@ -1,19 +1,25 @@
 package br.com.acdev.melisimian.core.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Blob;
 
 @Data
+@Setter
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "dna")
 public class DnaEntity {
 
+    @Lob
+    @Column
+    private Blob sequenciamento;
+
     @Column(unique = true)
-    private String sequenciamento;
+    private String hash;
 
     @Column(name = "is_simian")
     private boolean isSimio;

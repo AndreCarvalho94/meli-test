@@ -1,0 +1,7 @@
+insert into dna(id, is_simian, sequenciamento, hash) values (default, true, '', '1921jijds012')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, false, '', '1921jijd21012')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, false, '', '1921jijdads12')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, true, '', '1921jijdssad2')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, false, '', '1921jijds0dsa')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, true, '', '1921jijds012a')
+insert into dna(id, is_simian, sequenciamento, hash) values (default, true, '', '121212jijds012')

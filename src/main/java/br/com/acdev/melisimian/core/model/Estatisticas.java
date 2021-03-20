@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 public class Estatisticas {
 
     private Long countSimianDna;
     private Long countHumanDna;
-    private Long ratio;
 
+    public double getRatio(){
+        return (double)countSimianDna/(double)(countSimianDna+countSimianDna);
+    }
 }

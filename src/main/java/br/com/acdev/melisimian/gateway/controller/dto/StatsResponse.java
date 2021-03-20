@@ -20,7 +20,7 @@ public class StatsResponse {
     private Long countHumanDna;
 
     @JsonProperty("ratio")
-    private Long ratio;
+    private double ratio;
 
     public StatsResponse(Estatisticas estatisticas){
         this.countHumanDna = estatisticas.getCountHumanDna();

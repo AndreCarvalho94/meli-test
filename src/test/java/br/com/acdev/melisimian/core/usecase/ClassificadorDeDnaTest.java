@@ -17,10 +17,10 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class ClassificadorDeDnaTest {
 
-    DnaRepository dnaRepository = (new DnaRepository() {
+    private DnaRepository dnaRepository = (new DnaRepository() {
         @Override
         public DnaEntity salvar(Dna dna, boolean isSimio) {
-            return new DnaEntity("", true, 1L);
+            return new DnaEntity();
         }
 
         @Override
@@ -148,5 +148,17 @@ public class ClassificadorDeDnaTest {
     public void is_simio_test() {
         Dna dna = new Dna(Arrays.asList("CTGAGACT", "CTATGCAT", "TATTGTGT", "AGAGGGAT"));
         Assert.assertTrue(classificadorDeDna.isSimio(dna));
+    }
+
+    /**
+     * C T G A
+     * C T G T
+     * T A T T
+     * A G A G
+     */
+    @Test
+    public void is_not_simio_test() {
+        Dna dna = new Dna(Arrays.asList("CTGA", "CTGT ", "TATT ", "AGAG"));
+        Assert.assertFalse(classificadorDeDna.isSimio(dna));
     }
 }
