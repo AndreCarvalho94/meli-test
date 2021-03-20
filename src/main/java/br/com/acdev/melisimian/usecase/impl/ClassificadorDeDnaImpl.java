@@ -3,63 +3,106 @@ package br.com.acdev.melisimian.usecase.impl;
 import br.com.acdev.melisimian.domain.Dna;
 import br.com.acdev.melisimian.domain.Pontuacao;
 import br.com.acdev.melisimian.usecase.ClassificadorDeDna;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ClassificadorDeDnaImpl implements ClassificadorDeDna {
 
     public boolean isSimio(Dna dna) {
-        return computarPontuacao(dna).getPontuacao() > 2;
+        return computarPontuacao(dna).getPontuacao() > 1;
     }
 
     public Pontuacao computarPontuacao(Dna dna) {
         Pontuacao pontuacaoTotal = new Pontuacao();
+        Pontuacao p1 = verificarIgualdadeEmSequenciaHorizontal(dna);
+        Pontuacao p2 = verificarIgualdadeEmSequenciaVertical(dna);
+        Pontuacao p3 = verificarIgualdadeEmDiagonalPrimaria(dna);
+        Pontuacao p4 = verificaIgualdadeEmDiagonalSecundaria(dna);
+        pontuacaoTotal.merge(p1);
+        pontuacaoTotal.merge(p2);
+        pontuacaoTotal.merge(p3);
+        pontuacaoTotal.merge(p4);
+        return pontuacaoTotal;
+    }
 
+    public Pontuacao verificarIgualdadeEmSequenciaHorizontal(Dna dna) {
+        Pontuacao pontuacaoTotal = new Pontuacao();
         for (int i = 0; i < dna.tamanhoSequencia(); i++) {
-            Pontuacao p1 = verificaIgualdadeEmSequenciaHorizontal(i, dna);
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, i, 0, 0, 1, dna.tamanhoPalavras());
             pontuacaoTotal.merge(p1);
         }
+        return pontuacaoTotal;
+    }
 
+    public Pontuacao verificarIgualdadeEmSequenciaVertical(Dna dna) {
+        Pontuacao pontuacaoTotal = new Pontuacao();
         for (int j = 0; j < dna.tamanhoPalavras(); j++) {
-            Pontuacao p1 = verificaIgualdadeEmSequenciaVertical(j, dna);
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, 0, j, 1, 0, dna.tamanhoSequencia());
+            pontuacaoTotal.merge(p1);
+        }
+        return pontuacaoTotal;
+    }
+
+    public Pontuacao verificarIgualdadeEmDiagonalPrimaria(Dna dna) {
+        Pontuacao pontuacaoTotal = new Pontuacao();
+        for (int i = 0; i <= dna.tamanhoSequencia() - 4; i++) {
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, i, 0, 1, 1, dna.tamanhoSequencia());
+            pontuacaoTotal.merge(p1);
+        }
+        for (int j = 1; j <= dna.tamanhoPalavras() - 4; j++) {
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, 0, j, 1, 1, dna.tamanhoPalavras());
+            pontuacaoTotal.merge(p1);
+        }
+        return pontuacaoTotal;
+    }
+
+    public Pontuacao verificaIgualdadeEmDiagonalSecundaria(Dna dna) {
+        Pontuacao pontuacaoTotal = new Pontuacao();
+        for (int j = 3; j < dna.tamanhoPalavras(); j++) {
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, 0, j, 1, -1, dna.tamanhoPalavras());
+            pontuacaoTotal.merge(p1);
+        }
+        for (int i = 1; i < dna.tamanhoSequencia() - 4; i++) {
+            Pontuacao p1 = verificaIgualdadeEmDirecao(dna, i, dna.tamanhoPalavras() - 1, 1, -1, dna.tamanhoSequencia());
             pontuacaoTotal.merge(p1);
         }
 
         return pontuacaoTotal;
     }
 
-    public Pontuacao verificaIgualdadeEmSequenciaHorizontal(int linha, Dna dna) {
+    public Pontuacao verificaIgualdadeEmDirecao(Dna dna,
+                                                int linhaInicial,
+                                                int colunaInicial,
+                                                int incrementoLinha,
+                                                int incrementoColuna,
+                                                int limiteIncremento) {
         Pontuacao pontuacao = new Pontuacao();
-        int contIguais = 0;
-        int coluna = 0;
-        while (coluna < dna.tamanhoPalavras() - 1) {
+        int contIguais, incremento, linha, coluna;
+        contIguais = incremento = 0;
+        while (incremento < limiteIncremento - 1) {
+            linha = linhaInicial + (incremento * incrementoLinha);
+            coluna = colunaInicial + (incremento * incrementoColuna);
+            if (condicaoLinhaOuColunaOutOfRange(linha, coluna, incrementoLinha, incrementoColuna, dna)) {
+                break;
+            }
             char charAtual = dna.get(linha, coluna);
-            char charProximo = dna.get(linha, coluna + 1);
+            char charProximo = dna.get(linha + incrementoLinha, coluna + incrementoColuna);
             contIguais = charAtual == charProximo ? contIguais + 1 : 0;
             if (contIguais == 3) {
                 pontuacao.pontuar(charAtual);
                 contIguais = 0;
-                coluna++;
+                incremento++;
             }
-            coluna++;
+            incremento++;
         }
         return pontuacao;
     }
 
-    public Pontuacao verificaIgualdadeEmSequenciaVertical(int coluna, Dna dna) {
-        Pontuacao pontuacao = new Pontuacao();
-        int contIguais = 0;
-        int linha = 0;
-        while (linha < dna.tamanhoSequencia() - 1) {
-            char charAtual = dna.get(linha, coluna);
-            char charProximo = dna.get(linha + 1, coluna);
-            contIguais = charAtual == charProximo ? contIguais + 1 : 0;
-            if (contIguais == 3) {
-                pontuacao.pontuar(charAtual);
-                contIguais = 0;
-                linha++;
-            }
-            linha++;
-        }
-        return pontuacao;
+    public boolean condicaoLinhaOuColunaOutOfRange(int linha, int coluna, int incrementoLinha, int incrementoColuna, Dna dna) {
+        return linha + incrementoLinha >= dna.tamanhoSequencia() ||
+                linha + incrementoLinha < 0 ||
+                coluna + incrementoColuna >= dna.tamanhoPalavras() ||
+                coluna + incrementoColuna < 0;
     }
 
 }
