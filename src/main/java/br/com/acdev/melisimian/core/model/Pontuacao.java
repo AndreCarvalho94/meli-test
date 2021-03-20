@@ -1,4 +1,4 @@
-package br.com.acdev.melisimian.domain;
+package br.com.acdev.melisimian.core.model;
 
 import java.util.HashMap;
 import java.util.Map;

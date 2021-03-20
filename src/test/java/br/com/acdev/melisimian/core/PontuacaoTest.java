@@ -1,5 +1,6 @@
-package br.com.acdev.melisimian.domain;
+package br.com.acdev.melisimian.core;
 
+import br.com.acdev.melisimian.core.model.Pontuacao;
 import org.junit.Assert;
 import org.junit.Test;
 

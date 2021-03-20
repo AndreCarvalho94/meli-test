@@ -1,15 +1,23 @@
-package br.com.acdev.melisimian.usecase.impl;
+package br.com.acdev.melisimian.core.usecase.impl;
 
-import br.com.acdev.melisimian.domain.Dna;
-import br.com.acdev.melisimian.domain.Pontuacao;
-import br.com.acdev.melisimian.usecase.ClassificadorDeDna;
+import br.com.acdev.melisimian.core.dataprovider.DnaRepository;
+import br.com.acdev.melisimian.core.model.Dna;
+import br.com.acdev.melisimian.core.model.Pontuacao;
+import br.com.acdev.melisimian.core.usecase.ClassificadorDeDna;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ClassificadorDeDnaImpl implements ClassificadorDeDna {
 
+    @Autowired
+    private DnaRepository dnaRepository;
+
+    @Override
     public boolean isSimio(Dna dna) {
-        return computarPontuacao(dna).getPontuacao() > 1;
+        boolean isSimio = computarPontuacao(dna).getPontuacao() > 1;
+        dnaRepository.salvar(dna, isSimio);
+        return isSimio;
     }
 
     public Pontuacao computarPontuacao(Dna dna) {
@@ -104,5 +112,4 @@ public class ClassificadorDeDnaImpl implements ClassificadorDeDna {
                 coluna + incrementoColuna >= dna.tamanhoPalavras() ||
                 coluna + incrementoColuna < 0;
     }
-
 }

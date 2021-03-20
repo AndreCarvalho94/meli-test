@@ -1,8 +1,8 @@
-package br.com.acdev.melisimian.usecase;
+package br.com.acdev.melisimian.core.usecase;
 
-import br.com.acdev.melisimian.domain.Dna;
-import br.com.acdev.melisimian.domain.Pontuacao;
-import br.com.acdev.melisimian.usecase.impl.ClassificadorDeDnaImpl;
+import br.com.acdev.melisimian.core.model.Dna;
+import br.com.acdev.melisimian.core.model.Pontuacao;
+import br.com.acdev.melisimian.core.usecase.impl.ClassificadorDeDnaImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
